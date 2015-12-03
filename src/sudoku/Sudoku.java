@@ -5,6 +5,8 @@
  */
 package sudoku;
 
+import apcscvm.CVMProgram;
+
 /**
  *
  * @author kasra
@@ -15,7 +17,9 @@ public class Sudoku {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        SudokuModelImpl m = new SudokuModelImpl();
+        SudokuCV v = new SudokuCV();
+        new CVMProgram( "Word Twist", 800, 600, v, v, m ).start();
     }
     
 }

@@ -9,6 +9,6 @@ package sudoku;
  *
  * @author kasra
  */
-public class SudokuModelImpl {
+public class SudokuModelImpl implements SudokuModel{
     
 }
