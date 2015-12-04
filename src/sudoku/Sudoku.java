@@ -17,9 +17,9 @@ public class Sudoku {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        SudokuModelImpl m = new SudokuModelImpl();
+        SudokuModel m = new SudokuModel();
         SudokuCV v = new SudokuCV();
-        new CVMProgram( "Word Twist", 800, 600, v, v, m ).start();
+        new CVMProgram( "Word Twist", 926, 1071, v, v, m ).start();
     }
     
 }

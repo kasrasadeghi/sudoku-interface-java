@@ -5,10 +5,69 @@
  */
 package sudoku;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 /**
  *
  * @author kasra
  */
-interface SudokuModel {
+public class SudokuModel{
+
+    private Box[][] boxes;
+    
+    public SudokuModel() {
+        Scanner sc;
+        boxes = read();
+    }
+    
+    public static Box[][] read(){
+        Scanner sc;
+        try
+        {
+            sc = new Scanner( new File("sudoku.txt") );
+        } 
+        catch (FileNotFoundException ex)
+        {
+            System.out.println( "Clues not found" );
+            System.exit(0);
+            return null;
+        }
+        
+        // read words from the scanner object into an array list and return the array list
+        String[] parsed = new String[9];
+        for (int i = 0; sc.hasNext(); ++i)
+            parsed[i] = sc.next();
+        
+        Box[][] boxes = new Box[9][9];
+        for (int i = 0; i < 9; ++i){
+            for (int j = 0; j < 9; ++j)
+                boxes[i][i] = new Box(parsed[i].charAt(j) == '.'?0:( parsed[i].charAt(j) - '0'));
+        }
+        
+        return boxes;
+    }
+    
+    public void submit(int number, int row, int col) {
+    }
+
+    public boolean rowComplete(int row) {
+        
+        return true;
+    }
+
+    public boolean colComplete(int col) {
+        return true;
+    }
+
+    public boolean bigComplete(int index) {
+        return true;
+    }
+
+    public Box get(int row, int col) {
+        return boxes[row][col];
+    }
+    
     
 }

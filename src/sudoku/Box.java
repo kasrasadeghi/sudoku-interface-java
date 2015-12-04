@@ -36,7 +36,7 @@ public class Box {
     public Box(int number, boolean clue) {
         this.number = number;
         this.clue = clue;
-        this.conflict = checkConflict();
+        this.conflict = isConflict();
     }
     
     /**
@@ -59,7 +59,7 @@ public class Box {
      *
      * @return
      */
-    public static /*maybe private?*/ boolean checkConflict() {
+    public static /*maybe private?*/ boolean isConflict() {
         return false;
     }
 }
