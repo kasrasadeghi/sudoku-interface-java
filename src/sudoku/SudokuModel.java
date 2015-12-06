@@ -43,7 +43,7 @@ public class SudokuModel{
         Box[][] boxes = new Box[9][9];
         for (int i = 0; i < 9; ++i){
             for (int j = 0; j < 9; ++j)
-                boxes[i][i] = new Box(parsed[i].charAt(j) == '.'?0:( parsed[i].charAt(j) - '0'));
+                boxes[i][j] = new Box(parsed[i].charAt(j) == '.'?0:( parsed[i].charAt(j) - '0'), false);
         }
         
         return boxes;

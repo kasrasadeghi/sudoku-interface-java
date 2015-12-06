@@ -36,10 +36,12 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
         g.setFont(new Font(SANS_SERIF, PLAIN, 50));
         int h = oh - 100;
         for (int i = 0; i < 3; ++i)
-            for (int j = 0; j < 3; ++j) {
+            for (int j = 0; j < 3; ++j) 
                 paintSmallGrid(g, i*w/3, j * h/3, w/3, h/3);
-            }
-        
+        for (int i = 0; i < 9; ++i) 
+            for (int j = 0; j < 9; ++j) 
+                paintBox(g, i*w/9, j*h/9, m.get(i, j),w/9, h/9 );
+//                System.out.println("I:" + i + "\tJ: "+ j);
         paintGrid(g, w, h);
 //        g.drawString(w + ", " + oh, 150, 150);
     }
@@ -98,12 +100,19 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
      * @param tlx x-coordinate of the top left corner of the box
      * @param tly y-coordinate of the top left corner of the box
      * @param b the Box object
+     * @param w
+     * @param h
      */
     public void paintBox(Graphics g, int tlx, int tly, Box b, int w, int h) {
         if (b.clue) g.setColor(Color.BLACK);
-        else if (b.isConflict()) g.setColor(Color.RED);
+        else if (b.conflict) g.setColor(Color.RED);
         else g.setColor(Color.BLUE);
         drawStringBox(g, tlx, tly, b.number + "", w, h );
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(5));
+        g2.setColor(Color.GRAY);
+        if (b.selected) g2.drawRect(tlx + 5, tly + 5, w - 10, h - 10);
+        g2.setStroke(new BasicStroke(1));
     }
     
     /**
@@ -123,7 +132,8 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
      * @param me
      * @return
      */
-    public int mousePos(MouseEvent me){
+    public int mousePos(MouseEvent me, int w, int h){
+        
         return -1;
     }
     

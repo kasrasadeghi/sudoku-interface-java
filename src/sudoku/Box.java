@@ -12,7 +12,8 @@ package sudoku;
 public class Box {
     public boolean clue;
     public int number;
-    private boolean conflict;
+    public boolean conflict;
+    public boolean selected;
     
     /** 
      * Constructor for Boxes for the initialization of the board. 
@@ -25,18 +26,20 @@ public class Box {
         this.number = number;
         this.clue = true;
         this.conflict = false;
+        this.selected = false;
     }
     
     /** 
      * Constructor for the primary use of in-game data entry.
      * 
      * @param number
-     * @param clue
+     * @param clue if clue then clue else conflict
      */
     public Box(int number, boolean clue) {
         this.number = number;
         this.clue = clue;
-        this.conflict = isConflict();
+        this.conflict = !clue;
+        this.selected = false;
     }
     
     /**
@@ -51,15 +54,6 @@ public class Box {
         this.number = number;
         this.clue = clue;
         this.conflict = conflict;
-    }
-    
-    /**
-     * Checks whether there is a conflict or something... I dunno. I'll see how 
-     * I write the rest of the code.
-     *
-     * @return
-     */
-    public static /*maybe private?*/ boolean isConflict() {
-        return false;
+        this.selected = false;
     }
 }
