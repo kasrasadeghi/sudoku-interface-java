@@ -16,6 +16,7 @@ import java.util.Scanner;
 public class SudokuModel{
 
     private Box[][] boxes;
+    private Integer[] selected;
     
     public SudokuModel() {
         Scanner sc;
@@ -49,7 +50,7 @@ public class SudokuModel{
         return boxes;
     }
     
-    public void submit(int number, int row, int col) {
+    public void submit(int number) {
     }
 
     public boolean rowComplete(int row) {
@@ -69,5 +70,13 @@ public class SudokuModel{
         return boxes[row][col];
     }
     
+    public void select(int row, int col) {
+        if (row == selected[0] && col == selected[1])
+            selected[0] = selected[1] = null;
+        
+    }
     
+    public Integer[] getSelected() {
+        return selected;
+    }
 }
