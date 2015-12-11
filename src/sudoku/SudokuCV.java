@@ -19,7 +19,9 @@ import java.awt.event.MouseEvent;
  */
 public class SudokuCV extends DefaultControl<SudokuModel> implements View<SudokuModel>{
 
-    
+    private int w;
+    private int h;
+    private int oh;
     
     /**
      * Main Sudoku Paint.
@@ -33,14 +35,22 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
      */
     @Override
     public void paint(SudokuModel m, Graphics g, int w, int oh) {
-        g.setFont(new Font(SANS_SERIF, PLAIN, 50));
+        this.oh = oh;
+        this.w = w;
         int h = oh - 100;
+        this.h = h;
+        g.setFont(new Font(SANS_SERIF, PLAIN, 50));
+        
+        m.checkConflict();
+        
         for (int i = 0; i < 3; ++i)
             for (int j = 0; j < 3; ++j) 
                 paintSmallGrid(g, i*w/3, j * h/3, w/3, h/3);
+        
+        m.updateSelection();
         for (int i = 0; i < 9; ++i) 
             for (int j = 0; j < 9; ++j) 
-                paintBox(g, i*w/9, j*h/9, m.get(i, j),w/9, h/9 );
+                paintBox(g, i*w/9, j*h/9, m.get(j, i),w/9, h/9 );
 //                System.out.println("I:" + i + "\tJ: "+ j);
         paintGrid(g, w, h);
 //        g.drawString(w + ", " + oh, 150, 150);
@@ -107,7 +117,7 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
         if (b.clue) g.setColor(Color.BLACK);
         else if (b.conflict) g.setColor(Color.RED);
         else g.setColor(Color.BLUE);
-        drawStringBox(g, tlx, tly, b.number + "", w, h );
+        drawStringBox(g, tlx, tly, (b.number == 0)?"":(b.number + ""), w, h );
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(5));
         g2.setColor(Color.GRAY);
@@ -123,7 +133,9 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
      */
     @Override
     public void handleMouseClick(SudokuModel model, int ea, MouseEvent me){
-        
+        int row = mousePos(me, w, h)[0];
+        int col = mousePos(me, w, h)[1];
+        model.setSelected(row,col);
     }
     
     /**
@@ -132,9 +144,13 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
      * @param me
      * @return
      */
-    public int mousePos(MouseEvent me, int w, int h){
+    public int[] mousePos(MouseEvent me, int w, int h){
+        for (int i = 0; i < 9; ++i)
+            for (int j = 0; j < 9; ++j)
+                if (me.getX() > w*i/9 && me.getX() < w*(i+1)/9 && me.getY() > h*j/9 && me.getY() < h*(j+1)/9)
+                    return new int[] {j, i};
         
-        return -1;
+        return new int[] {-1, -1};
     }
     
     /**
@@ -145,6 +161,22 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
      */
     @Override
     public void handleKeyPress(SudokuModel model, int ea, KeyEvent ke) {
-        
+        switch(ke.getKeyCode()) {
+            case KeyEvent.VK_UP: model.move(-1, 0); break;
+            case KeyEvent.VK_DOWN: model.move(1, 0); break;
+            case KeyEvent.VK_LEFT: model.move(0, -1); break;
+            case KeyEvent.VK_RIGHT: model.move(0, 1); break;
+            case KeyEvent.VK_0: model.submit(0); break;
+            case KeyEvent.VK_1: model.submit(1); break;
+            case KeyEvent.VK_2: model.submit(2); break;
+            case KeyEvent.VK_3: model.submit(3); break;
+            case KeyEvent.VK_4: model.submit(4); break;
+            case KeyEvent.VK_5: model.submit(5); break;
+            case KeyEvent.VK_6: model.submit(6); break;
+            case KeyEvent.VK_7: model.submit(7); break;
+            case KeyEvent.VK_8: model.submit(8); break;
+            case KeyEvent.VK_9: model.submit(9); break;
+            case KeyEvent.VK_BACK_SPACE: model.submit(0); break;
+        }
     }
 }

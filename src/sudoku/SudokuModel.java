@@ -7,7 +7,9 @@ package sudoku;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 /**
  *
@@ -16,13 +18,21 @@ import java.util.Scanner;
 public class SudokuModel{
 
     private Box[][] boxes;
-    private Integer[] selected;
+    private int selectedRow;
+    private int selectedCol;
     
     public SudokuModel() {
-        Scanner sc;
+        selectedRow = selectedCol = 4;
         boxes = read();
     }
     
+    /**
+     * Reads from file.
+     * Reads a text file in the main directory called "sudoku.txt";
+     * Will print out "Clues not found" in system.out if text file is not found.
+     *
+     * @return a 2D array of Boxes.
+     */
     public static Box[][] read(){
         Scanner sc;
         try
@@ -44,39 +54,110 @@ public class SudokuModel{
         Box[][] boxes = new Box[9][9];
         for (int i = 0; i < 9; ++i){
             for (int j = 0; j < 9; ++j)
-                boxes[i][j] = new Box(parsed[i].charAt(j) == '.'?0:( parsed[i].charAt(j) - '0'), false);
+                boxes[j][i] = parsed[j].charAt(i) == '.'
+                        ?new Box( 0, false)
+                        :new Box( parsed[j].charAt(i) - '0');
         }
         
         return boxes;
     }
     
     public void submit(int number) {
+        Box box = boxes[selectedRow][selectedCol];
+        if (box.clue) return;
+        box.number = number;
+        checkConflict();
     }
-
-    public boolean rowComplete(int row) {
-        
-        return true;
+    
+    public void checkConflict(){
+        for (int i = 0; i < 9; ++i)
+            for (int j = 0; j < 9; ++j)
+                boxes[i][j].conflict = false;
+        for (int i = 0; i < 9; ++i) {
+            rowConflict(i);
+            colConflict(i);
+        }
+        for (int i = 0; i < 3; ++i)
+            for (int j = 0; j < 3; ++j)
+                bigConflict(i, j);
     }
-
-    public boolean colComplete(int col) {
-        return true;
+    
+    public void colConflict(int col) {
+        for (int num = 1; num < 10; ++num){
+            ArrayList<Integer> indices = new ArrayList<>();
+            for (int i = 0; i < 9; ++i)
+                if (boxes[i][col].number == num)
+                    indices.add(i);
+            if (indices.size() > 1 )
+                indices.stream().forEach(i -> 
+                    boxes[i][col].conflict = true);
+        }
     }
-
-    public boolean bigComplete(int index) {
-        return true;
+    
+    public void rowConflict(int row) {
+        for (int num = 1; num < 10; ++num){
+            ArrayList<Integer> indices = new ArrayList<>();
+            for (int i = 0; i < 9; ++i)
+                if (boxes[row][i].number == num)
+                    indices.add(i);
+            if (indices.size() > 1 )
+                indices.stream().forEach(i -> 
+                    boxes[row][i].conflict = true);
+        }
     }
-
+    //boxes[(big/3)*2 +i/3][(big%3)*2 +i%2].number == num
+    public void bigConflict(int biggie, int smalls) {
+        for (int num = 1; num < 10; ++num) {
+            ArrayList<int[]> indices = new ArrayList<>();
+            for (int i = 0; i < 3; ++i)
+                for (int j = 0; j < 3; ++j)
+                    if (boxes[biggie + i][smalls + j].number == num)
+                        indices.add(new int[] {i, j});
+            if (indices.size() > 1 )
+                indices.stream().forEach(indexArr -> 
+                    boxes[biggie + indexArr[0]][smalls + indexArr[1]].conflict = true);
+        }
+    }
+    
     public Box get(int row, int col) {
         return boxes[row][col];
     }
     
-    public void select(int row, int col) {
-        if (row == selected[0] && col == selected[1])
-            selected[0] = selected[1] = null;
-        
+    /**
+     *
+     * @param row
+     * @param col
+     */
+    public void setSelected(int row, int col) {
+//        if (row == selectedRow && col == selectedCol)
+//            selectedRow = selectedCol = -1;
+//        else {
+            selectedRow = row;
+            selectedCol = col;
+//        }
     }
     
-    public Integer[] getSelected() {
-        return selected;
+    /**
+     *
+     * @param dr
+     * @param dc
+     */
+    public void move(int dr, int dc) {
+        if (selectedRow == 0 && dr == -1) return;
+        if (selectedRow == 8 && dr == 1) return;
+        if (selectedCol == 0 && dc == -1) return;
+        if (selectedCol == 8 && dc == 1) return;
+        selectedRow += dr;
+        selectedCol += dc;
+    }
+    
+    public void updateSelection() {
+        for (int i = 0; i < boxes.length; ++i)
+            for (int j = 0; j < boxes[i].length; ++j)
+                boxes[i][j].selected = false;
+        if (selectedRow != -1 && selectedRow != -1)
+            boxes[selectedRow][selectedCol].selected = true;
+//        System.out.println("row:" + selectedRow + "\tcol:" + selectedCol);
+        //return new int[] {selectedRow, selectedCol};
     }
 }

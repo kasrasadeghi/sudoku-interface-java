@@ -19,7 +19,7 @@ public class Sudoku {
     public static void main(String[] args) {
         SudokuModel m = new SudokuModel();
         SudokuCV v = new SudokuCV();
-        new CVMProgram( "Word Twist", 926, 1071, v, v, m ).start();
+        new CVMProgram( "Sudoku", 926, 1071, v, v, m ).start();
     }
     
 }

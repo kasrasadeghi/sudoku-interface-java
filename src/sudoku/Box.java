@@ -35,10 +35,10 @@ public class Box {
      * @param number
      * @param clue if clue then clue else conflict
      */
-    public Box(int number, boolean clue) {
+    public Box(int number, boolean conflict) {
         this.number = number;
-        this.clue = clue;
-        this.conflict = !clue;
+        this.clue = false;
+        this.conflict = conflict;
         this.selected = false;
     }
     
@@ -56,4 +56,5 @@ public class Box {
         this.conflict = conflict;
         this.selected = false;
     }
+    
 }
