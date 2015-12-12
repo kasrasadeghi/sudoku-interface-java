@@ -27,7 +27,7 @@ public class SudokuModel{
     
     /**
      * Reads from file.
-     * Reads a text file in the main directory called "sudoku.txt";
+     * Reads a text file in the main directory called "Sudoku1.txt";
      * Will print out "Clues not found" in system.out if text file is not found.
      *
      * @return a 2D array of Boxes.
@@ -36,7 +36,7 @@ public class SudokuModel{
         Scanner sc;
         try
         {
-            sc = new Scanner( new File("sudoku.txt") );
+            sc = new Scanner( new File("Sudoku1.txt") );
         } 
         catch (FileNotFoundException ex)
         {
