@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
 /**
  *
@@ -69,6 +68,14 @@ public class SudokuModel{
         checkConflict();
     }
     
+    public boolean gameOver() {
+        boolean output = true;
+        for (int i = 0; i < boxes.length; ++i)
+            for (int j = 0; j < boxes.length; ++j)
+                output = output && ((!boxes[i][j].conflict && boxes[i][j].number != 0) || boxes[i][j].clue);
+        return output;
+    }
+    
     public void checkConflict(){
         for (int i = 0; i < 9; ++i)
             for (int j = 0; j < 9; ++j)
@@ -79,7 +86,7 @@ public class SudokuModel{
         }
         for (int i = 0; i < 3; ++i)
             for (int j = 0; j < 3; ++j)
-                bigConflict(i, j);
+                bigConflict(i*3, j*3);
     }
     
     public void colConflict(int col) {
@@ -105,7 +112,7 @@ public class SudokuModel{
                     boxes[row][i].conflict = true);
         }
     }
-    //boxes[(big/3)*2 +i/3][(big%3)*2 +i%2].number == num
+    
     public void bigConflict(int biggie, int smalls) {
         for (int num = 1; num < 10; ++num) {
             ArrayList<int[]> indices = new ArrayList<>();
@@ -129,12 +136,8 @@ public class SudokuModel{
      * @param col
      */
     public void setSelected(int row, int col) {
-//        if (row == selectedRow && col == selectedCol)
-//            selectedRow = selectedCol = -1;
-//        else {
-            selectedRow = row;
-            selectedCol = col;
-//        }
+        selectedRow = row;
+        selectedCol = col;
     }
     
     /**

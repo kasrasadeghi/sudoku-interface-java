@@ -50,10 +50,15 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
         m.updateSelection();
         for (int i = 0; i < 9; ++i) 
             for (int j = 0; j < 9; ++j) 
-                paintBox(g, i*w/9, j*h/9, m.get(j, i),w/9, h/9 );
-//                System.out.println("I:" + i + "\tJ: "+ j);
+                paintBox(g, i*w/9, j*h/9, m.get(j, i), w/9, h/9 );
         paintGrid(g, w, h);
-//        g.drawString(w + ", " + oh, 150, 150);
+        
+        if (m.gameOver()) {
+            g.setColor(Color.BLACK);
+            g.fillRect(w/2-200, h/2-100, 400, 200);
+            g.setColor(Color.RED);
+            drawStringBox(g, w/2-200, h/2-200, "GAME OVER", 400, 400);
+        }
     }
     
     /**
@@ -72,6 +77,7 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
         g2.drawRect(0, h/3, w, h/3);
         g2.drawRect(w/3, 0, w/3, h);
         g2.setStroke(new BasicStroke(1));
+        
         
     }
     
@@ -133,6 +139,7 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
      */
     @Override
     public void handleMouseClick(SudokuModel model, int ea, MouseEvent me){
+        if (model.gameOver()) return;
         int row = mousePos(me, w, h)[0];
         int col = mousePos(me, w, h)[1];
         model.setSelected(row,col);
@@ -161,6 +168,7 @@ public class SudokuCV extends DefaultControl<SudokuModel> implements View<Sudoku
      */
     @Override
     public void handleKeyPress(SudokuModel model, int ea, KeyEvent ke) {
+        if (model.gameOver()) return;
         switch(ke.getKeyCode()) {
             case KeyEvent.VK_UP: model.move(-1, 0); break;
             case KeyEvent.VK_DOWN: model.move(1, 0); break;
